@@ -1,0 +1,27 @@
+<h1><%= conv_topic @conversation %></h1>
+
+<div>
+  <ul>
+    <% @conversation.users.each do |user| %>
+      <li><%= user.nickname %></li>
+    <% end %>
+  </ul>
+</div>
+
+<div>
+  <ul>
+    <% @conversation.messages.each do |message| %>
+      <li><%= message.user.nickname %>:<%= message.content %></li>
+    <% end %>
+  </ul>
+</div>
+
+
+<%= form_for [@conversation, @conversation.messages.new] do |f| %>
+  <div>
+    <%= f.text_area :content %>
+  </div>
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,13 @@
+<h1>Home</h1>
+
+<div>
+You are: <%= current_user.nickname %>, <%= link_to "Edit Profile", edit_user_registration_path %>
+</div>
+
+<div>
+  <ul>
+    <% current_user.friends.each do |friend| %>
+      <li><%= link_to "Talk to #{friend.nickname}", start_conversation_path(:interlocutor_id => friend.id) %></li>
+    <% end %>
+  </ul>
+</div>

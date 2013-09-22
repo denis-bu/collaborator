@@ -1,0 +1,12 @@
+development: &common
+  address: smtp.gmail.com
+  port: 587
+  domain: gmail.com
+  user_name: some_one@gmail.com
+  password: secret
+  authentication: plain
+  enable_starttls_auto: true
+production:
+  <<: *common
+test:
+  <<: *common
