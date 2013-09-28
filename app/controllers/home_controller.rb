@@ -14,9 +14,8 @@ class HomeController < ApplicationController
     conv =  interlocutor.conversations.where(:id => current_user.conversations).first
 
     if conv.nil?
-      conv = Conversation.new(
-          :users => [current_user, interlocutor]
-      )
+      conv = Conversation.new
+      conv.users = [current_user, interlocutor]
       conv.save!
     end
 
