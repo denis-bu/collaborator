@@ -7,7 +7,7 @@ class MessagesFetcher
   MODE_LATEST = 'latest'
   MODE_HISTORY = 'history'
 
-  LIMITS = [25, 50, 100]
+  LIMITS = [25, 50, 100, 500]
 
   def initialize(conversation, params)
     @params = params
