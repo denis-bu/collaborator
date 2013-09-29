@@ -19,7 +19,7 @@ class MessagesController < ApplicationController
     if @message.save
       respond_to do |format|
         format.html { redirect_to conversation_path(@conversation)}
-        format.json { render :status => :ok }
+        format.json { render :json => { :sequence => @message.id }.to_json, :status => :ok }
       end
     else
       respond_to do |format|
