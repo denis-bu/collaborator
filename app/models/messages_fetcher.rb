@@ -29,15 +29,12 @@ class MessagesFetcher
   private
 
   def fetch_default(scope)
-    within_str = '(`messages`.`created_at` > ?) and (`messages`.`created_at` < ?)'
-
-    scope.sequence_forward.where(within_str, Date.yesterday.end_of_day, Date.tomorrow.beginning_of_day)
+    today_messages(scope.sequence_forward)
   end
 
   def fetch_latest(scope)
     sequence = @params[PARAM_NAME_SEQ]
-    #TODO: limit number of returned messages somehow...
-    scope.sequence_forward.where('`messages`.`id` > ?', sequence)
+    today_messages(scope.sequence_forward.where('`messages`.`id` > ?', sequence))
   end
 
   def fetch_history(scope)
@@ -46,6 +43,11 @@ class MessagesFetcher
     # Fetching messages in reverse order to apply limit.
     # This would be a part of an interface: history is in reverse order...
     scope.sequence_reverse.limit(limit_from_params)
+  end
+
+  def today_messages(scope)
+    within_str = '(`messages`.`created_at` > ?) and (`messages`.`created_at` < ?)'
+    scope.where(within_str, Date.yesterday.end_of_day, Date.tomorrow.beginning_of_day)
   end
 
   def limit_from_params
