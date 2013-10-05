@@ -1,3 +1,16 @@
+/*
+* flash_* - helpers for popup messages to user.
+*
+* ConstInterval - intervals generator (always const).
+*
+* DampedInterval - dumped intervals generator.
+* Params:
+*   start - timeout to begin with.
+*   end - max timeout.
+*   rate - rate to calculate next timeout. next(i) = next(i-1) * rate.
+*
+* Scheduler - execute callback according to given timeout generator.
+* */
 function make_flash(css_class, content) {
   $("<div class='" + css_class +"'></div>").html(content).purr();
 }

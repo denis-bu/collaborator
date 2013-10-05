@@ -1,5 +1,19 @@
-// url - default url for this conversation
-// onError - callback(error_text)
+/*
+* App messaging API.
+*
+* Note. Sequence is some unique (within conversation) number assigned to each message. It determines
+* order of messages in conversation. I.e. later messages have grater sequence number.
+*
+* MessageFetcher - encapsulates interaction with messaging service for a given conversation.
+* Params:
+*   url - default url for conversation.
+*   onError - common callback for errors handling. By default use flash_error to popup error text.
+* Methods:
+*   fetchDefault - retrieve default message scope (messages for today).
+*   fetchLatest - retrieve messages that have been posted after latest fetched message in conversation.
+*   fetchBackward - retrieve messages history from a given sequence. Number of messages is always limited.
+*   fetchForward - not implemented. Intention: if some full text search was made - ability to navigate forward.
+* */
 function MessageFetcher(url, onError) {
   this.default_url = url;
   var defaultOnError = function(error_text) {

@@ -1,3 +1,12 @@
+/*
+* MessagePane - class responsible for rendering messages. Currently accepts ol/ul containers.
+*
+* Messenger - class responsible for managing messages.
+* Params:
+*   element - selector of container.
+*   url - default url for conversation
+* */
+
 function MessagePane(element) {
   this.$elementPane = jQuery(element);
 }
