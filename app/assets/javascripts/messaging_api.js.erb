@@ -29,6 +29,8 @@ MessageFetcher.PARAM_LIMIT = '<%= MessagesFetcher::PARAM_NAME_LIMIT %>';
 MessageFetcher.MODE_LATEST = '<%= MessagesFetcher::MODE_LATEST %>';
 MessageFetcher.MODE_BACKWARD = '<%= MessagesFetcher::MODE_HISTORY %>';
 
+MessageFetcher.LIMITS = [<%= MessagesFetcher::LIMITS.join(', ') %>];
+
 MessageFetcher.prototype.fetchDefault = function(callback) {
   this.internalFetch(callback, {});
 };
