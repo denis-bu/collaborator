@@ -8,12 +8,4 @@ class Message < ActiveRecord::Base
   scope :sequence_forward, order('`messages`.`id` asc')
   scope :sequence_reverse, order('`messages`.`id` desc')
 
-  def to_json
-    {
-        :sequence => id,
-        :author => user.nickname,
-        :content => content,
-        :timestamp => created_at
-    }.to_json
-  end
 end

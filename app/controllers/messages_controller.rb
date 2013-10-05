@@ -4,12 +4,27 @@ class MessagesController < ApplicationController
 
   before_filter :fetch_conversation
 
+  class JSONResponder
+    def self.respond_with_messages(messages)
+      messages.map { |message| to_json(message) }.to_json
+    end
+
+    def self.to_json(message)
+        {
+            :sequence => message.id,
+            :author => message.user.nickname,
+            :content => message.content,
+            :timestamp => message.created_at
+        }
+    end
+  end
+
   def index
     fetcher = MessagesFetcher.new @conversation, params
     @messages = fetcher.messages
     respond_to do |format|
       format.html { render }
-      format.json { render :json => @messages, :status => :ok }
+      format.json { render :json => JSONResponder.respond_with_messages(@messages), :status => :ok }
     end
   end
 
