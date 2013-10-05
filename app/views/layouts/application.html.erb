@@ -5,11 +5,14 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+
+  <%= yield :head_content %>
+
 </head>
 <body>
 <div>
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
+  <p class="app-notice"><%= notice %></p>
+  <p class="app-alert"><%= alert %></p>
 </div>
 
 <%= yield %>

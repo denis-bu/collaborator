@@ -1,0 +1,59 @@
+// url - default url for this conversation
+// onError - callback(error_text)
+function MessageFetcher(url, onError) {
+  this.default_url = url;
+  var defaultOnError = function(error_text) {
+    flash_error('Error while fetching messages. Error text:' + error_text);
+  };
+  this.onError = onError || defaultOnError;
+}
+
+MessageFetcher.PARAM_MODE = '<%= MessagesFetcher::PARAM_NAME_MODE %>';
+MessageFetcher.PARAM_SEQ = '<%= MessagesFetcher::PARAM_NAME_SEQ %>';
+MessageFetcher.PARAM_LIMIT = '<%= MessagesFetcher::PARAM_NAME_LIMIT %>';
+
+MessageFetcher.MODE_LATEST = '<%= MessagesFetcher::MODE_LATEST %>';
+MessageFetcher.MODE_BACKWARD = '<%= MessagesFetcher::MODE_HISTORY %>';
+
+MessageFetcher.prototype.fetchDefault = function(callback) {
+  this.internalFetch(callback, {});
+};
+
+MessageFetcher.prototype.fetchLatest = function(callback, sequence) {
+  var data = {};
+  data[MessageFetcher.PARAM_MODE] = MessageFetcher.MODE_LATEST;
+  data[MessageFetcher.PARAM_SEQ] = sequence;
+  this.internalFetch(callback, data);
+};
+
+MessageFetcher.prototype.fetchBackward = function(callback, sequence, limit) {
+  var data = {};
+  data[MessageFetcher.PARAM_MODE] = MessageFetcher.MODE_BACKWARD;
+  data[MessageFetcher.PARAM_SEQ] = sequence;
+  // TODO: handle correct limits.
+  data[MessageFetcher.PARAM_LIMIT] = limit;
+  this.internalFetch(callback, data);
+};
+
+MessageFetcher.prototype.fetchForward = function(callback, sequence, limit) {
+  // TODO: implement.
+};
+
+MessageFetcher.prototype.internalFetch = function(callback, data) {
+  var that = this;
+  jQuery.ajax({
+    url: this.default_url,
+    data: data,
+    success: function(data, status, xhr) { that.onFetchSuccess(callback, data, status, xhr); },
+    error: function(xhr, status, error) { that.onFetchError(xhr, status, error); }
+  });
+};
+
+MessageFetcher.prototype.onFetchSuccess = function(callback, data, status, xhr) {
+  // Here data is array of messages.
+  callback(data);
+};
+
+MessageFetcher.prototype.onFetchError = function(xhr, status, error) {
+  this.onError(status + ':' + error)
+};

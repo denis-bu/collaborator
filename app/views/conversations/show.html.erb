@@ -1,25 +1,46 @@
+<%= content_for :head_content do %>
+  <script type="text/javascript">
+    $(function() {
+      var $form = $('#new_message');
+
+      $form.on('ajax:success', function(evt, data, status, xhr) {
+        $form.find('#message_content').val('');
+        flash_success('Message posted!');
+        // Pulse loader
+        messenger.pulse();
+      });
+
+      $form.on('ajax:error', function(xhr, status, error) {
+        // Show error
+        flash_error('Message post error!');
+      });
+
+      var messenger = new Messenger('#messages', '<%= conversation_messages_path(@conversation, :format => :json) %>');
+      $('#messages').get().collaboratorMessenger = messenger;
+      $('#fetch_history').bind('click', function(evt){
+        evt.preventDefault();
+        messenger.fetchBackward(25);
+      });
+
+    })
+  </script>
+<% end %>
+
+
 <h1><%= conv_topic @conversation %></h1>
 
-<div>
-  <ul>
-    <% @conversation.users.each do |user| %>
-      <li><%= user.nickname %></li>
-    <% end %>
-  </ul>
-</div>
+<a href="#" id="fetch_history">Fetch some history (25 messages)</a>
 
 <div>
-  <ul>
-    <% @conversation.messages.each do |message| %>
-      <li><%= message.user.nickname %>:<%= message.content %></li>
-    <% end %>
-  </ul>
+  <ol id="messages">
+
+  </ol>
 </div>
 
 
-<%= form_for [@conversation, @conversation.messages.new] do |f| %>
+<%= form_for [@conversation, @conversation.messages.new], :remote => true, :format => :json do |f| %>
   <div>
-    <%= f.text_area :content %>
+    <%= f.text_area :content, :size => '80x3' %>
   </div>
   <div>
     <%= f.submit %>
