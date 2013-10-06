@@ -66,6 +66,6 @@ module Collaborator
     config.assets.version = '1.0'
 
     config.time_zone = "Moscow"
-    config.active_record.default_timezone = "Moscow"
+    config.active_record.default_timezone = :local
   end
 end
