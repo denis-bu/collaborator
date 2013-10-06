@@ -7,18 +7,59 @@
 *   url - default url for conversation
 * */
 
+function onlyDate(datetime) {
+  var d = new Date(datetime);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 function MessagePane(element) {
   this.$elementPane = jQuery(element);
 }
 
-MessagePane.prototype.prependMessage = function(message) {
+MessagePane.MSG_CONTENT_CLASS = 'message-content';
+MessagePane.MSG_DATE_HEADER_CLASS = 'message-date-header';
+
+MessagePane.prototype.updateDateHeaders = function(timestamp, direction) {
+  var msgDate = onlyDate(timestamp);
+  if (!this.dateBegin && !this.dateEnd) {
+    this.dateBegin = msgDate;
+    this.dateEnd = msgDate;
+    this.dateTag(msgDate).appendTo(this.$elementPane);
+    return;
+  }
+
+  if (direction == 'prepend') {
+    if (this.dateBegin.getTime() != msgDate.getTime()) {
+      this.dateBegin = msgDate;
+      this.dateTag(msgDate).prependTo(this.$elementPane);
+    }
+    return;
+  }
+
+  // Append.
+  if (this.dateEnd.getTime() != msgDate.getTime()) {
+    this.dateEnd = msgDate;
+    this.dateTag(msgDate).appendTo(this.$elementPane);
+  }
+};
+
+MessagePane.prototype.dateTag = function(date) {
+  return jQuery('<div class="'+ MessagePane.MSG_DATE_HEADER_CLASS +'" />').text(date.toDateString());
+};
+
+MessagePane.prototype.contentTag = function(message) {
   var messageText = message.author + '(' + message.timestamp + '): ' + message.content;
-  jQuery('<li />').text(messageText).prependTo(this.$elementPane);
+  return jQuery('<div class="'+ MessagePane.MSG_CONTENT_CLASS +'" />').text(messageText);
+
+};
+MessagePane.prototype.prependMessage = function(message) {
+  this.updateDateHeaders(message.timestamp, 'prepend');
+  this.contentTag(message).insertAfter(this.$elementPane.find('div.' + MessagePane.MSG_DATE_HEADER_CLASS).first());
 };
 
 MessagePane.prototype.appendMessage = function(message) {
-  var messageText = message.author + '(' + message.timestamp + '): ' + message.content;
-  jQuery('<li />').text(messageText).appendTo(this.$elementPane);
+  this.updateDateHeaders(message.timestamp, 'append');
+  this.contentTag(message).appendTo(this.$elementPane);
 };
 
 

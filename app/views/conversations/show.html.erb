@@ -1,22 +1,20 @@
 <%= content_for :head_content do %>
   <script type="text/javascript">
     $(function() {
-      var $form = $('#new_message');
+      var messenger = new Messenger('#messages', '<%= conversation_messages_path(@conversation, :format => :json) %>');
 
+      var $form = $('#new_message');
       $form.on('ajax:success', function(evt, data, status, xhr) {
         $form.find('#message_content').val('');
         flash_success('Message posted!');
         // Pulse loader
         messenger.pulse();
       });
-
       $form.on('ajax:error', function(xhr, status, error) {
         // Show error
         flash_error('Message post error!');
       });
 
-      var messenger = new Messenger('#messages', '<%= conversation_messages_path(@conversation, :format => :json) %>');
-      $('#messages').get().collaboratorMessenger = messenger;
       $('#fetch_history').bind('click', function(evt){
         evt.preventDefault();
         messenger.fetchBackward(25);
@@ -31,10 +29,7 @@
 
 <a href="#" id="fetch_history">Fetch some history (25 messages)</a>
 
-<div>
-  <ol id="messages">
-
-  </ol>
+<div id="messages">
 </div>
 
 
